@@ -9,6 +9,8 @@ QT       -= gui
 TARGET = yalib
 TEMPLATE = lib
 
+#VERSION = 2.0
+
 DEFINES += YALIB_LIBRARY
 
 SOURCES += yalib.cpp
