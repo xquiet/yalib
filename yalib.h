@@ -31,10 +31,6 @@
 class YALIBSHARED_EXPORT Yalib {
 public:
     Yalib();
-    QString detectFGBinPath(bool autodetect = true);
-    QString detectFGVersion();
-    QString detectRootPath();
-    QString detectOS();
     QString getYFHome();
     QString getYFScenery();
     QString getDefaultScenery();
@@ -56,11 +52,20 @@ public:
     QString getTerraSyncBinPath();
     QString getTerraSyncPidFilePath();
 
+    QString getYaInstallBinary();
+
 private:
+    QString detectFGBinPath(bool autodetect = true);
+    QString detectFGVersion();
+    QString detectRootPath();
+    QString detectYaInstallPath();
+    QString detectOS();
+
     QString fgRootPath;
     QString fgfs_binary;
     QString operating_system;
     QString fgVersion;
+    QString yainstall_binary;
 };
 
 #endif // YALIB_H

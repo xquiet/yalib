@@ -37,6 +37,9 @@ bool Yalib::initialize(bool autoDetect)
             return false;
         }
     }
+
+    yainstall_binary = detectYaInstallPath();
+
     return true;
 }
 
@@ -293,6 +296,40 @@ QString Yalib::detectRootPath()
     return QString();
 }
 
+QString Yalib::detectYaInstallPath()
+{
+    QStringList possiblePaths;
+    #ifdef Q_OS_WIN
+        possiblePaths << _win_program_files + "/YaInstall/yainstall";
+        //possiblePaths << "C:/Program Files/YaInstall";
+    #endif
+    #ifdef Q_OS_UNIX
+        #ifdef Q_OS_MAC
+            possiblePaths << "/Applications/YaInstall.app/Contents";
+        #elif defined Q_OS_LINUX
+            possiblePaths << "/usr/bin/yainstall"
+                          << "/usr/sbin/yainstall"
+                          << "/opt/yainstall/yainstall"
+                          << "/usr/local/bin/yainstall"
+                          << "/usr/share/yainstall/yainstall"
+                          << "/usr/share/games/yainstall/yainstall"
+                          << "/usr/share/games/YaInstall/yainstall"
+                          << "/home/matteo/workspace/yainstall/yainstall"; // for test purpose
+        #else
+            //bsd
+            possiblePaths << "/usr/local/share/yainstall/yainstall"
+                          << "/usr/local/bin/yainstall"
+                          << "/usr/bin/yainstall";
+        #endif
+    #endif
+    for(int i=0;i<possiblePaths.count();i++)
+    {
+        if(QFile::exists(possiblePaths[i]))
+            return possiblePaths[i];
+    }
+    return QString();
+}
+
 QString Yalib::getTerraSyncBinPath()
 {
     QString ts_path = "";
@@ -314,4 +351,9 @@ QString Yalib::getTerraSyncBinPath()
 QString Yalib::getTerraSyncPidFilePath()
 {
     return getYFHome() + "/ts_pid";
+}
+
+QString Yalib::getYaInstallBinary()
+{
+    return yainstall_binary;
 }
