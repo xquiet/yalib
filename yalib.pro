@@ -8,6 +8,7 @@ QT       -= gui
 
 TARGET = yalib
 TEMPLATE = lib
+mac: CONFIG += lib_bundle
 
 #VERSION = 2.0
 
@@ -36,3 +37,8 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+FRAMEWORK_HEADERS.version = Versions
+FRAMEWORK_HEADERS.files = yalib.h yalib_global.h
+FRAMEWORK_HEADERS.path = HEADERS
+QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
