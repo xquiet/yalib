@@ -313,8 +313,7 @@ QString Yalib::detectYaInstallPath()
                           << "/usr/local/bin/yainstall"
                           << "/usr/share/yainstall/yainstall"
                           << "/usr/share/games/yainstall/yainstall"
-                          << "/usr/share/games/YaInstall/yainstall"
-                          << "/home/matteo/workspace/yainstall/yainstall"; // for test purpose
+                          << "/usr/share/games/YaInstall/yainstall";
         #else
             //bsd
             possiblePaths << "/usr/local/share/yainstall/yainstall"
