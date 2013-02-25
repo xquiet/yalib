@@ -54,6 +54,10 @@ public:
 
     QString getYaInstallBinary();
 
+    QString getAIDir();
+
+    QStringList getScenarios();
+
 private:
     QString detectFGBinPath(bool autodetect = true);
     QString detectFGVersion();

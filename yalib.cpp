@@ -89,6 +89,11 @@ QString Yalib::getAPTSource()
     return getRootPath() + "/Airports/apt.dat.gz";
 }
 
+QString Yalib::getAIDir()
+{
+    return getRootPath() + "/AI";
+}
+
 QHash<QString, QStringList> Yalib::parseAirportsIndex(QString path)
 {
     QFile airports(path);
@@ -355,4 +360,24 @@ QString Yalib::getTerraSyncPidFilePath()
 QString Yalib::getYaInstallBinary()
 {
     return yainstall_binary;
+}
+
+QStringList Yalib::getScenarios()
+{
+    QDir dir(getRootPath()+"/AI");
+    if(dir.exists())
+    {
+        QStringList results;
+        QStringList fileList = dir.entryList(QDir::Files);
+        foreach(QString file, fileList)
+        {
+            if(file.endsWith(".xml"))
+            {
+                results << file.replace(".xml","");
+            }
+        }
+        return results;
+    }
+    qDebug("Directory %s not found", dir.absolutePath().toStdString().data());
+    return QStringList();
 }
