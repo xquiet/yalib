@@ -32,10 +32,13 @@ symbian {
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib
+        header_files.path = /opt/usr/include/yalib
     } else {
         target.path = /usr/lib
+        header_files.path = /usr/include/yalib
     }
-    INSTALLS += target
+    header_files.files = $$HEADERS
+    INSTALLS += target header_files
 }
 
 FRAMEWORK_HEADERS.version = Versions
