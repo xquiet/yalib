@@ -316,6 +316,7 @@ QString Yalib::detectYaInstallPath()
                           << "/usr/sbin/yainstall"
                           << "/opt/yainstall/yainstall"
                           << "/usr/local/bin/yainstall"
+                          << "/usr/games/yainstall"
                           << "/usr/share/yainstall/yainstall"
                           << "/usr/share/games/yainstall/yainstall"
                           << "/usr/share/games/YaInstall/yainstall";
