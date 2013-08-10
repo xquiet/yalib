@@ -10,7 +10,7 @@ TARGET = yalib
 TEMPLATE = lib
 mac: CONFIG += lib_bundle
 
-#VERSION = 2.0
+VERSION = 1.2
 
 DEFINES += YALIB_LIBRARY
 
