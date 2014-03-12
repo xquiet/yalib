@@ -14,10 +14,12 @@ VERSION = 1.2
 
 DEFINES += YALIB_LIBRARY
 
-SOURCES += yalib.cpp
+SOURCES += yalib.cpp \
+    installer.cpp
 
 HEADERS += yalib.h\
-        yalib_global.h
+        yalib_global.h \
+    installer.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -39,6 +41,15 @@ unix:!symbian {
     }
     header_files.files = $$HEADERS
     INSTALLS += target header_files
+}
+
+unix:!macx {
+    LIBS += -lzip -lz
+    target.path = /usr/bin
+}
+macx {
+    INCLUDEPATH += /opt/local/include /opt/local/lib/libzip/include
+    LIBS += -L/opt/local/lib -lzip -lz
 }
 
 FRAMEWORK_HEADERS.version = Versions
