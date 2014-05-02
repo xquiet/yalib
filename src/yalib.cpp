@@ -12,7 +12,7 @@ Yalib::Yalib()
 
 bool Yalib::initialize(bool autoDetect)
 {
-    if(operating_system.trimmed().compare("")==0)
+    if(operating_system.isEmpty())
         operating_system = detectOS();
     if(autoDetect)
     {
@@ -24,7 +24,7 @@ bool Yalib::initialize(bool autoDetect)
     // detectFGVersion needs the rootpath
     fgVersion = detectFGVersion();
 
-    if(fgRootPath.trimmed().compare("")==0)
+    if(fgRootPath.isEmpty())
         return false;
 
     QDir dir(getYFScenery());
