@@ -36,9 +36,7 @@ add_definitions(-DVERSION=${VERSION})
 add_library( ${TARGETLIB} SHARED ${TARGETLIB}.cpp )
 
 # setup version and soversion
-set_target_properties( ${TARGETLIB}
-	               PROPERTIES
-		       VERSION ${VERSION}
-		       SOVERSION ${SOVERSION}
-		       )
+set_target_properties( ${TARGETLIB} PROPERTIES VERSION ${VERSION} SOVERSION ${SOVERSION})
 
+install(TARGETS yalib DESTINATION lib)
+install(FILES yalib.h DESTINATION include/yalib)
