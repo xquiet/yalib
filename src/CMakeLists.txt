@@ -28,6 +28,9 @@ find_package(Qt5Core REQUIRED)
 # include_directories(${Qt5Widgets_INCLUDE_DIRS})
 # include_directories(${Qt5Core_INCLUDE_DIRS})
 
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+set(INSTALL_INC_DIR include CACHE PATH "Installation directory for headers")
+
 set( TARGETLIB "yalib" )
 
 add_definitions(-DVERSION=${VERSION})
@@ -41,5 +44,5 @@ set_target_properties( ${TARGETLIB} PROPERTIES VERSION ${VERSION} SOVERSION ${SO
 
 set( HEADERS yalib.h yalib_global.h )
 
-install(TARGETS yalib DESTINATION lib)
-install(FILES ${HEADERS} DESTINATION include/yalib)
+install(TARGETS ${TARGETLIB} DESTINATION ${INSTALL_LIB_DIR})
+install(FILES ${HEADERS} DESTINATION ${INSTALL_INC_DIR}/${TARGETLIB})
