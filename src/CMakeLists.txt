@@ -22,18 +22,19 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 # Find the QtWidgets library
 find_package(Qt5Core REQUIRED)
-# find_package(Qt5Widgets REQUIRED)
 
 # The Qt5Widgets_INCLUDES also includes the include directories for
 # dependencies QtCore and QtGui
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-include_directories(${Qt5Core_INCLUDE_DIRS})
+# include_directories(${Qt5Widgets_INCLUDE_DIRS})
+# include_directories(${Qt5Core_INCLUDE_DIRS})
 
 set( TARGETLIB "yalib" )
 
 add_definitions(-DVERSION=${VERSION})
 
 add_library( ${TARGETLIB} SHARED ${TARGETLIB}.cpp )
+
+qt5_use_modules( ${TARGETLIB} Core )
 
 # setup version and soversion
 set_target_properties( ${TARGETLIB} PROPERTIES VERSION ${VERSION} SOVERSION ${SOVERSION})
