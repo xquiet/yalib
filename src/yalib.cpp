@@ -295,7 +295,8 @@ QString Yalib::detectRootPath()
     #endif
     for(int i=0;i<possiblePaths.count();i++)
     {
-        if(QFile::exists(possiblePaths[i]))
+	// check for the version file because of multiple flightgear directories could coexist
+        if(QFile::exists(possiblePaths[i]+"/version"))
             return possiblePaths[i];
     }
     return QString();
