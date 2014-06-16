@@ -16,6 +16,16 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(yalib)
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    message( STATUS "Building on MacOSX" )
+    set( MACOSX ON )
+else()
+    unset( MACOSX )
+endif()
+
+# Debug, RelWithDebInfo, Release
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
@@ -35,7 +45,16 @@ set( TARGETLIB "yalib" )
 
 add_definitions(-DVERSION=${VERSION})
 
-add_library( ${TARGETLIB} SHARED ${TARGETLIB}.cpp )
+if( MACOSX )
+    add_library( ${TARGETLIB}
+                 SHARED
+                 ${TARGETLIB}.cpp
+                 ${TARGETLIB}_global.h
+                 ${TARGETLIB}.h )
+
+else( MACOSX )
+    add_library( ${TARGETLIB} SHARED ${TARGETLIB}.cpp )
+endif( MACOSX )
 
 qt5_use_modules( ${TARGETLIB} Core )
 
