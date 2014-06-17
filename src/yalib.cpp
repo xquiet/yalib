@@ -19,7 +19,7 @@ bool Yalib::initialize(bool autoDetect)
         fgRootPath = detectRootPath();
         fgfs_binary = detectFGBinPath();
         if(!QFile::exists(fgfs_binary))  // debian has fgfs under /usr/games/
-            return false;                // if appconf.ini already exists must it must be removed!
+            return false;                // if appconf.ini already exists it must be removed!
     }
     // detectFGVersion needs the rootpath
     fgVersion = detectFGVersion();
@@ -225,11 +225,44 @@ QString Yalib::detectOS()
     #ifdef Q_OS_WIN32
         QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
         _win_program_files = pe.value("ProgramFiles").replace("\\","/");
+        if(_win_program_files.contains("x86"))
+        {
+            // maybe we are running Win64
+            // let's check
+            sysinfo = new QProcess();
+            sysinfo->setProcessChannelMode(QProcess::MergedChannels);
+            sysinfo->start(pe.value("WINDIR") + "/System32/Wbem/wmic",
+                           QStringList() << "os"
+                                         << "get"
+                                         << "osarchitecture",
+                           QProcess::ReadOnly
+                           );
+            sysinfo->waitForFinished();
+            QByteArray bytes = sysinfo->readAll();
+            QStringList strLines = QString(bytes).split("\n");
+            //qDebug("Arch is: %s", strLines[1].toStdString().data());
+            if(strLines[1].trimmed().compare("64-bit")==0)
+            {
+                // 64-bit os running a 32-bit version of yaflight
+                // concatenate paths!
+                _win_program_files = _win_program_files.append(";").append(pe.value("ProgramW6432").replace("\\","/"));
+                _32_on_64 = true;
+                //qDebug("New win_program_files is: %s", _win_program_files.toStdString().data());
+                return "Windows64";
+            }
+            else
+            {
+                // 32 bit os
+                _32_on_64 = false;
+            }
+        }
         return "Windows";
     #elif defined Q_OS_WIN64
         QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
         _win_program_files = pe.value("ProgramW6432").replace("\\","/");
         _win_program_files = _win_program_files.append(";").append(pe.value("ProgramFiles").replace("\\","/"));
+        //qDebug("ProgramFiles: %s", _win_program_files.toStdString().data());
+        return "Windows64";
     #endif
     return "";
 }
@@ -239,9 +272,16 @@ QString Yalib::detectFGBinPath(bool autodetect)
     if(autodetect)
     {
         #ifdef Q_OS_WIN32
-            return "\""+getRootPath()+"/../bin/Win32/fgfs.exe\"";
-	#elif defined Q_OS_WIN64
-	    return "\""+getRootPath()+"/../bin/Win64/fgfs.exe\"";
+            if(_32_on_64)
+            {
+                return getRootPath()+"/../bin/Win64/fgfs.exe";
+            }
+            else
+            {
+                return getRootPath()+"/../bin/Win32/fgfs.exe";
+            }
+        #elif defined Q_OS_WIN64
+            return getRootPath()+"/../bin/Win64/fgfs.exe";
         #elif defined Q_OS_UNIX
             #ifdef Q_OS_LINUX
                 return "/usr/bin/fgfs";
@@ -281,12 +321,20 @@ QString Yalib::detectRootPath()
 {
     QStringList possiblePaths;
     #ifdef Q_OS_WIN32
-        possiblePaths << _win_program_files + "/FlightGear/data";
-        //possiblePaths << "C:/Program Files/FlightGear/data";
+        if(_32_on_64)
+        {
+            QStringList items = _win_program_files.split(";");
+            possiblePaths << items[0].replace("\\","/").append("/FlightGear/data");
+            possiblePaths << items[1].replace("\\","/").append("/FlightGear/data");
+        }
+        else
+        {
+            possiblePaths << _win_program_files + "/FlightGear/data";
+        }
     #elif defined Q_OS_WIN64
-	QStringList items = _win_program_files.split(";");
-	possiblePaths << items[0] + "/FlightGear/data";
-	possiblePaths << items[1] + "/FlightGear/data";
+        QStringList items = _win_program_files.split(";");
+        possiblePaths << items[0].replace("\\","/").append("/FlightGear/data");
+        possiblePaths << items[1].replace("\\","/").append("/FlightGear/data");
     #endif
     #ifdef Q_OS_UNIX
         #ifdef Q_OS_MAC
@@ -304,7 +352,7 @@ QString Yalib::detectRootPath()
     #endif
     for(int i=0;i<possiblePaths.count();i++)
     {
-	// check for the version file because of multiple flightgear directories could coexist
+        // check for the version file because of multiple flightgear directories could coexist
         if(QFile::exists(possiblePaths[i]+"/version"))
             return possiblePaths[i];
     }
@@ -316,7 +364,6 @@ QString Yalib::detectYaInstallPath()
     QStringList possiblePaths;
     #ifdef Q_OS_WIN
         possiblePaths << _win_program_files + "/YaInstall/yainstall";
-        //possiblePaths << "C:/Program Files/YaInstall";
     #endif
     #ifdef Q_OS_UNIX
         #ifdef Q_OS_MAC

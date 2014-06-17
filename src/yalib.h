@@ -71,6 +71,7 @@ private:
     QString fgVersion;
     QString yainstall_binary;
     QString _win_program_files;
+    bool _32_on_64;
 };
 
 #endif // YALIB_H
