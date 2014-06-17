@@ -222,11 +222,16 @@ QString Yalib::detectOS()
             return os;
         #endif
     #endif
-    #ifdef Q_OS_WIN
+    #ifdef Q_OS_WIN32
         QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
         _win_program_files = pe.value("ProgramFiles").replace("\\","/");
 	qDebug("Program Files path is: %s", _win_program_files);
         return "Windows";
+    #elif defined Q_OS_WIN64
+	QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
+        _win_program_files = pe.value("ProgramW6432").replace("\\","/");
+	_win_program_files = _win_program_files.append(";").append(pe.value("ProgramFiles").replace("\\","/"));
+	qDebug("Program Files path is: %s", _win_program_files);
     #endif
     return "";
 }
@@ -277,9 +282,13 @@ QString Yalib::detectFGVersion()
 QString Yalib::detectRootPath()
 {
     QStringList possiblePaths;
-    #ifdef Q_OS_WIN
+    #ifdef Q_OS_WIN32
         possiblePaths << _win_program_files + "/FlightGear/data";
         //possiblePaths << "C:/Program Files/FlightGear/data";
+    #elif defined Q_OS_WIN64
+	QStringList items = _win_program_files.split(";");
+	possiblePaths << items[0] + "/FlightGear/data";
+	possiblePaths << items[1] + "/FlightGear/data";
     #endif
     #ifdef Q_OS_UNIX
         #ifdef Q_OS_MAC
