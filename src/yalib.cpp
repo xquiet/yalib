@@ -225,7 +225,7 @@ QString Yalib::detectOS()
     #ifdef Q_OS_WIN
         QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
         _win_program_files = pe.value("ProgramFiles").replace("\\","/");
-
+	qDebug("Program Files path is: %s", _win_program_files);
         return "Windows";
     #endif
     return "";
@@ -235,8 +235,10 @@ QString Yalib::detectFGBinPath(bool autodetect)
 {
     if(autodetect)
     {
-        #ifdef Q_OS_WIN
+        #ifdef Q_OS_WIN32
             return "\""+getRootPath()+"/../bin/Win32/fgfs.exe\"";
+	#elif defined Q_OS_WIN64
+	    return "\""+getRootPath()+"/../bin/Win64/fgfs.exe\"";
         #elif defined Q_OS_UNIX
             #ifdef Q_OS_LINUX
                 return "/usr/bin/fgfs";
