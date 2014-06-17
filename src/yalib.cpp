@@ -225,13 +225,11 @@ QString Yalib::detectOS()
     #ifdef Q_OS_WIN32
         QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
         _win_program_files = pe.value("ProgramFiles").replace("\\","/");
-	qDebug("Program Files path is: %s", _win_program_files);
         return "Windows";
     #elif defined Q_OS_WIN64
-	QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
+        QProcessEnvironment pe(QProcessEnvironment::systemEnvironment());
         _win_program_files = pe.value("ProgramW6432").replace("\\","/");
-	_win_program_files = _win_program_files.append(";").append(pe.value("ProgramFiles").replace("\\","/"));
-	qDebug("Program Files path is: %s", _win_program_files);
+        _win_program_files = _win_program_files.append(";").append(pe.value("ProgramFiles").replace("\\","/"));
     #endif
     return "";
 }
