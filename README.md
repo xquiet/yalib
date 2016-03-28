@@ -1,4 +1,6 @@
 YaLib
 =====
 
-YaLib is the yaflight and yainstall shared library
+YaFlight Library.
+
+This library provides shared functionalities for YaFlight and YaInstall
