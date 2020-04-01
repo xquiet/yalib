@@ -6,14 +6,12 @@ Yalib::Yalib()
     // initialize
     fgRootPath = "";
     fgVersion = "";
-    operating_system = "";
+    operating_system = detectOS();
     fgfs_binary = "";
 }
 
 bool Yalib::initialize(bool autoDetect)
 {
-    if(operating_system.isEmpty())
-        operating_system = detectOS();
     if(autoDetect)
     {
         fgRootPath = detectRootPath();
@@ -136,11 +134,6 @@ QString Yalib::getYFHome()
         #endif
     #endif
     yfhome = QDir::homePath() + yfhome;
-    if (!QFile::exists(yfhome))
-    {
-        QDir tmppath(QDir::homePath());
-        tmppath.mkpath(yfhome);
-    }
     return yfhome;
 }
 
@@ -241,7 +234,7 @@ QString Yalib::detectOS()
             QByteArray bytes = sysinfo->readAll();
             QStringList strLines = QString(bytes).split("\n");
             //qDebug("Arch is: %s", strLines[1].toStdString().data());
-            if(strLines[1].trimmed().compare("64-bit")==0)
+            if((strLines[1].trimmed().compare("64-bit")==0)||(strLines[1].trimmed().compare("64 bit")==0))
             {
                 // 64-bit os running a 32-bit version of yaflight
                 // concatenate paths!
@@ -324,8 +317,10 @@ QString Yalib::detectRootPath()
         if(_32_on_64)
         {
             QStringList items = _win_program_files.split(";");
-            possiblePaths << items[0].replace("\\","/").append("/FlightGear/data");
-            possiblePaths << items[1].replace("\\","/").append("/FlightGear/data");
+            for(int i=0; i < items.count(); i++)
+            {
+                possiblePaths << items[i].replace("\\","/").append("/FlightGear/data");
+            }
         }
         else
         {
@@ -333,8 +328,10 @@ QString Yalib::detectRootPath()
         }
     #elif defined Q_OS_WIN64
         QStringList items = _win_program_files.split(";");
-        possiblePaths << items[0].replace("\\","/").append("/FlightGear/data");
-        possiblePaths << items[1].replace("\\","/").append("/FlightGear/data");
+        for(int i=0; i < items.count(); i++)
+        {
+            possiblePaths << items[i].replace("\\","/").append("/FlightGear/data");
+        }
     #endif
     #ifdef Q_OS_UNIX
         #ifdef Q_OS_MAC
@@ -352,7 +349,7 @@ QString Yalib::detectRootPath()
     #endif
     for(int i=0;i<possiblePaths.count();i++)
     {
-        // check for the version file because of multiple flightgear directories could coexist
+        // check for the version file because of multiple flightgear directories could coexists
         if(QFile::exists(possiblePaths[i]+"/version"))
             return possiblePaths[i];
     }
