@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2012-2016  Matteo Pasotti <matteo.pasotti@gmail.com>
+    Copyright (C) 2012-2020  Matteo Pasotti <matteo.pasotti@gmail.com>
 
     This file is part of yalib
 
@@ -64,6 +64,7 @@ private:
     QString detectRootPath();
     QString detectYaInstallPath();
     QString detectOS();
+
 
     QString fgRootPath;
     QString fgfs_binary;
