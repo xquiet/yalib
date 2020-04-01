@@ -1,9 +1,9 @@
 ###############
-# (C) 2012 by Matteo Pasotti <matteo.pasotti@gmail.com>
+# (C) 2012 - 2020 by Matteo Pasotti <matteo.pasotti@gmail.com>
 # License: GPLv3
 ###############
 SET( VERSION_MAJOR "1")
-SET( VERSION_MINOR "7" )
+SET( VERSION_MINOR "8" )
 SET( VERSION_PATCH "0" )
 SET( VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${GIT_SHA1_VERSION}" )
 
