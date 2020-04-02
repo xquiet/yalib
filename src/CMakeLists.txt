@@ -56,7 +56,8 @@ else( MACOSX )
     add_library( ${TARGETLIB} SHARED ${TARGETLIB}.cpp )
 endif( MACOSX )
 
-qt5_use_modules( ${TARGETLIB} Core )
+# qt5_use_modules( ${TARGETLIB} Core )
+target_link_libraries( ${TARGETLIB} Qt5::Core )
 
 # setup version and soversion
 set_target_properties( ${TARGETLIB} PROPERTIES VERSION ${VERSION} SOVERSION ${SOVERSION})
