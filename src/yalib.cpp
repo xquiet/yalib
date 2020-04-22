@@ -267,14 +267,23 @@ QString Yalib::detectFGBinPath(bool autodetect)
         #ifdef Q_OS_WIN32
             if(_32_on_64)
             {
-                return getRootPath()+"/../bin/Win64/fgfs.exe";
+                if (QFile::exists(getRootPath()+"/../bin/Win64/fgfs.exe"))
+                    return getRootPath()+"/../bin/Win64/fgfs.exe";
+                else if (QFile::exists(getRootPath()+"/../bin/fgfs.exe"))
+                    return getRootPath()+"/../bin/fgfs.exe";
             }
             else
             {
-                return getRootPath()+"/../bin/Win32/fgfs.exe";
+                if (QFile::exists(getRootPath()+"/../bin/Win32/fgfs.exe"))
+                    return getRootPath()+"/../bin/Win32/fgfs.exe";
+                else if (QFile::exists(getRootPath()+"/../bin/fgfs.exe"))
+                    return getRootPath()+"/../bin/fgfs.exe";
             }
         #elif defined Q_OS_WIN64
-            return getRootPath()+"/../bin/Win64/fgfs.exe";
+            if (QFile::exists(getRootPath()+"/../bin/Win64/fgfs.exe"))
+                return getRootPath()+"/../bin/Win64/fgfs.exe";
+            else if (QFile::exists(getRootPath()+"/../bin/fgfs.exe"))
+                return getRootPath()+"/../bin/fgfs.exe";
         #elif defined Q_OS_UNIX
             #ifdef Q_OS_LINUX
                 return "/usr/bin/fgfs";
@@ -319,18 +328,23 @@ QString Yalib::detectRootPath()
             QStringList items = _win_program_files.split(";");
             for(int i=0; i < items.count(); i++)
             {
-                possiblePaths << items[i].replace("\\","/").append("/FlightGear/data");
+                QString currPath = QString(items[i]).replace("\\","/");
+                possiblePaths << currPath + "/FlightGear/data";
+                possiblePaths << currPath + "/FlightGear 2019.1.1/data";
             }
         }
         else
         {
             possiblePaths << _win_program_files + "/FlightGear/data";
+            possiblePaths << _win_program_files + "/FlightGear 2019.1.1/data";
         }
     #elif defined Q_OS_WIN64
         QStringList items = _win_program_files.split(";");
         for(int i=0; i < items.count(); i++)
         {
-            possiblePaths << items[i].replace("\\","/").append("/FlightGear/data");
+            QString currPath = QString(items[i]).replace("\\","/");
+            possiblePaths << currPath + "/FlightGear/data";
+            possiblePaths << currPath + "/FlightGear 2019.1.1/data";
         }
     #endif
     #ifdef Q_OS_UNIX
